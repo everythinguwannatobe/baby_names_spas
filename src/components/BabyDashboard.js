@@ -1,21 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
+import axios from "axios";
 import NameList from "./NameList";
 
-const BabyDashboard = () => {
-	const names = ["A", "B", "C", "D", "E", "F", "G"];
+const BabyDashboard = (props) => {
 
 	const [fullName, setFullName] = useState("");
+	const [names, setNames] = useState([]);
+
+	const loadData = () => {
+		let namesData = props.names;
+		setNames(namesData);
+	};
+
+	useEffect(() => loadData(), [props.names]);
+
+	const [searchParams] = useSearchParams();
+	const list_id = searchParams.get("list_id");
 
 	const handleChange = (event) => {
 		event.preventDefault();
 
-		setFullName(event.target.value);
+		let inputName = event.target.value;
+
+		setFullName(inputName);
 
 		console.log(fullName);
 	};
 
+	const trimSpaces = fullName => {
+		let babyName = fullName.trim();
+		let names = babyName.split(" ");
+		let name = names[0] + " " + names[1];
+		return name;
+	};
+
+	const isOnlyLettersAndSpaces = fullName => {
+		return /^[A-Za-z\s]*$/.test(fullName);
+	};
+
 	const hanldeSubmit = (event) => {
 		event.preventDefault();
+		if (isOnlyLettersAndSpaces(fullName)) {
+			let name = trimSpaces(fullName);
+			axios
+			.post('babies/create', {name: name, list_id: list_id})
+			.then(({data}) => {
+				alert(data.name+" has been successfully registered!");
+				setFullName("");
+			})
+			.catch(e => console.log(e));
+		}
+		else {
+			alert("Names must consist of only letters.")
+		}
 
 		console.log(fullName);
 	};
