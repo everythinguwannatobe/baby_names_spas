@@ -11,8 +11,9 @@ const NameList = (props) => {
 
 	const loadData = () => {
 		let names = props.names;
+
 		let sortedNames = names.sort((first, second) => first.name.localeCompare(second.name));
-		console.log(sortedNames);
+
 		setBabyNames(sortedNames);
 	}
 

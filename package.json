@@ -2,7 +2,7 @@
   "name": "baby_names_spas",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3000",
+  "proxy": "https://5086-188-43-136-46.jp.ngrok.io",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",

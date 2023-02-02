@@ -16,8 +16,6 @@ const RegisterPanel = () => {
 		event.preventDefault();
 
 		setFullName(event.target.value);
-
-		console.log(fullName);
 	};
 
 	const handleRegister = (event) => {
@@ -26,7 +24,6 @@ const RegisterPanel = () => {
 		axios
 			.post("/users/create", {name: fullName})
 			.then(({data}) => {
-				console.log(data.list_id);
 				list_id = data.list_id;
 				navigate('/?list_id='+list_id);
 				setListId(list_id);

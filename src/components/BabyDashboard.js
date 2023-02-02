@@ -24,8 +24,6 @@ const BabyDashboard = (props) => {
 		let inputName = event.target.value;
 
 		setFullName(inputName);
-
-		console.log(fullName);
 	};
 
 	const trimSpaces = fullName => {
@@ -54,8 +52,6 @@ const BabyDashboard = (props) => {
 		else {
 			alert("Names must consist of only letters.")
 		}
-
-		console.log(fullName);
 	};
 
 	return (
