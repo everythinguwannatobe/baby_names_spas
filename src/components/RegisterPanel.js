@@ -30,25 +30,22 @@ const RegisterPanel = () => {
 				list_id = data.list_id;
 				navigate('/?list_id='+list_id);
 				setListId(list_id);
-			})
-			.catch(err => console.log(err));
-
+			}).catch(err => console.log(err));
 	};
 
 	useEffect(() => {
 		if (list_id) {
 			axios
-			.get('babies', {params: {list_id: list_id}})
-			.then(({ data }) => {
-				console.log(data);
+			.post("babies", {list_id: list_id})
+			.then(({data}) => {
+				setListId(list_id);
 				setBabyNames(data);
-			})
-			.catch(e => console.log(e));
+			}).catch(e => console.log(e));
 
 		}
 	}, []);
 
-	const layouts = !list_id ? 
+	const layouts = !listId ? 
 	<div>
 		<div className="flex justify-center my-60">
 			<input 
