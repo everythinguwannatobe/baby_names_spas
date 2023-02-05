@@ -1,15 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
-import BabyDashboard from './components/BabyDashboard';
-import RegisterPanel from './components/RegisterPanel';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom';
+import Router from './routes/routes';
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path='/' element={<RegisterPanel />} />
-      </Routes>
+        <Router />
     </BrowserRouter>
   );
 }

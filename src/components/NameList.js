@@ -1,56 +1,51 @@
 import React, { useEffect, useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import BabyName from "./BabyName";
+import { generateDroppableId } from "../utils/generateDroppableId";
 
-const NameList = (props) => {
-	const [babyNames, setBabyNames] = useState([]);
+const NameList = ({ names }) => {
+	const [ babyNames, setBabyNames ] = useState([]);
 
 	useEffect(() => {
-		loadData();
-	},[props.names]);
+		const sortedNames = names.sort(( first, second ) => first.name.localeCompare( second.name ));
 
-	const loadData = () => {
-		let names = props.names;
+		setBabyNames( sortedNames );
+	}, [ names ]);
 
-		let sortedNames = names.sort((first, second) => first.name.localeCompare(second.name));
+	const onDragEnd = ( result ) => {
+		if ( !result.destination ) return;
 
-		setBabyNames(sortedNames);
-	}
+		const reorderedNames = Array.from( babyNames );
+		const [ reorderedName ] = reorderedNames.splice( result.source.index, 1 );
+		reorderedNames.splice( result.destination.index, 0, reorderedName );
 
-	const onDragEnd = (result) => {
-		if (!result.destination) return;
-
-		const items = Array.from(babyNames);
-		const [reorderedItem] = items.splice(result.source.index, 1);
-		items.splice(result.destination.index, 0, reorderedItem);
-
-		setBabyNames(items);
+		setBabyNames( reorderedNames );
 	};
 
 	return (
 		<div>
-			<DragDropContext onDragEnd={onDragEnd}>
-				<Droppable droppableId={babyNames}>
-					{(provided) => (
-						<div className="babyNames" ref={provided.innerRef} {...provided.droppableProps}>
-							{babyNames.map((babyName, index) => (
+			<DragDropContext onDragEnd={ onDragEnd }>
+				<Droppable droppableId={generateDroppableId(babyNames)} >
+					{( provided ) => (
+						<div className="babyNames" ref={ provided.innerRef } { ...provided.droppableProps }>
+							{babyNames.map(( babyName, index ) => (
 								<Draggable
-									key={babyName.id}
-									draggableId={babyName.id.toString()}
-									index={index}
+									key={ babyName.id }
+									draggableId={ babyName.id.toString() }
+									index={ index }
 								>
-									{(provided) => (
+									{( provided ) => (
 										<div
-											{...provided.draggableProps}
-											{...provided.dragHandleProps}
-											ref={provided.innerRef}
+											{ ...provided.draggableProps }
+											{ ...provided.dragHandleProps }
+											ref={ provided.innerRef }
 										>
-											<BabyName name={babyName.name} />
+											<BabyName name={ babyName.name } />
 										</div>
 									)}
 								</Draggable>
 							))}
-							{provided.placeholder}
+							{ provided.placeholder }
 						</div>
 					)}
 				</Droppable>

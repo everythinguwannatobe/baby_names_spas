@@ -1,53 +1,35 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import axios from "axios";
-import NameList from "./NameList";
 
-const BabyDashboard = (props) => {
+import NameList from "../components/NameList";
+import { isOnlyLettersAndSpaces, cleanupSpaces } from '../utils/validateString';
+import { addBaby } from "../apis/userApi";
+
+const RegisterBaby = ({ names }) => {
+	const { REACT_APP_BASE_URL } = process.env;
 
 	const [fullName, setFullName] = useState("");
-	const [names, setNames] = useState([]);
-
-	const loadData = () => {
-		let namesData = props.names;
-		setNames(namesData);
-	};
-
-	useEffect(() => loadData(), [props.names]);
 
 	const [searchParams] = useSearchParams();
-	const list_id = searchParams.get("list_id");
+	const listId = searchParams.get("list_id");
 
 	const handleChange = (event) => {
 		event.preventDefault();
 
-		let inputName = event.target.value;
+		const inputName = event.target.value;
 
 		setFullName(inputName);
-	};
-
-	const trimSpaces = fullName => {
-		let babyName = fullName.trim();
-		let names = babyName.split(" ");
-		let name = names[0] + " " + names[1];
-		return name;
-	};
-
-	const isOnlyLettersAndSpaces = fullName => {
-		return /^[A-Za-z\s]*$/.test(fullName);
 	};
 
 	const hanldeSubmit = (event) => {
 		event.preventDefault();
 		if (isOnlyLettersAndSpaces(fullName)) {
-			let name = trimSpaces(fullName);
-			axios
-			.post('babies/create', {name: name, list_id: list_id})
-			.then(({data}) => {
-				alert(data.name+" has been successfully registered!");
+			(async () => {
+				const name = cleanupSpaces(fullName);
+				const newBaby = addBaby(REACT_APP_BASE_URL+"/babies/create", {name, listId});
+				alert(newBaby + " has been successfully registered!");
 				setFullName("");
-			})
-			.catch(e => console.log(e));
+			})();
 		}
 		else {
 			alert("Names must consist of only letters.")
@@ -83,7 +65,7 @@ const BabyDashboard = (props) => {
 				<NameList names={names} />
 			</div>
 		</>
-	);
+		);
 };
 
-export default BabyDashboard;
+export default RegisterBaby;
